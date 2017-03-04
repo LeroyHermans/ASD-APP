@@ -9,6 +9,8 @@ public class MergeSort<T extends Comparable<T>> extends Sorter<T> {
 
     @Override
     public T[] sort(T[] unsorted) {
+        if(unsorted == null)
+            return unsorted;
         mergeSort(unsorted, new Range(0, unsorted.length - 1));
         return unsorted;
     }

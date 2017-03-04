@@ -7,6 +7,8 @@ public class QuickSort<T extends Comparable<T>> extends Sorter<T> {
 
     @Override
     public T[] sort(T[] unsorted) {
+        if(unsorted == null || unsorted.length <= 1)
+            return unsorted;
         return quicksort(unsorted, 0, unsorted.length-1);
     }
 

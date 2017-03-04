@@ -1,48 +1,64 @@
-package it.sijmen.han.datastructure;
+package it.sijmen.han.lists;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
 /**
+ * Sijmens Array List
  * Created by Sijmen on 15-2-2017.
  */
-public class MyArrayList<T> implements Iterable<T>{
+public class SArrayList<T> implements Iterable<T> {
 
     private Object[] data;
 
     private int length = 0;
 
-    public MyArrayList(int length) {
+    public SArrayList(int length) {
         this.data = new Object[length];
     }
 
-    public MyArrayList(){
+    public SArrayList(){
         this(0);
     }
 
+    @SafeVarargs
+    public SArrayList(T... data){
+        this.data = data;
+        this.length = data.length;
+    }
+
     public int add(T obj){
-        synchronized (this){
-            if(data.length == length){
-                Object[] old = data;
-                data = new Object[data.length*2+1];
-                System.arraycopy(old, 0, data, 0, old.length);
-            }
-            data[length] = obj;
-            return length++;
-        }
+        if(data.length == length)
+            duplicateSize();
+        data[length] = obj;
+        return length++;
+    }
+
+    private void duplicateSize(){
+        increaseSize(data.length*2+1);
+    }
+
+    private void increaseSize(int size){
+        Object[] old = data;
+        data = new Object[size];
+        System.arraycopy(old, 0, data, 0, old.length);
+    }
+
+    public T get(int index){
+        if(index < 0 || index > length -1)
+            throw new IndexOutOfBoundsException();
+        return (T) data[index];
     }
 
     public void remove(int index){
-        synchronized (this) {
-            if(index > length-1 || index < 0)
-                throw new IndexOutOfBoundsException();
-            System.arraycopy(data, index + 1, data, index, length - 1 - index);
-            length--;
-        }
+        if(index > length-1 || index < 0)
+            throw new IndexOutOfBoundsException();
+        System.arraycopy(data, index + 1, data, index, length - 1 - index);
+        length--;
     }
 
     public void set(int index, T value){
-        if(index > length-1 || index < 0)
+        if(index < 0 || index > length-1)
             throw new IndexOutOfBoundsException();
         data[index] = value;
     }
@@ -56,11 +72,18 @@ public class MyArrayList<T> implements Iterable<T>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        MyArrayList<?> that = (MyArrayList<?>) o;
+        SArrayList<?> that = (SArrayList<?>) o;
 
         if (length != that.length) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(data, that.data);
+        if (this.data==that.data) return true;
+        if (this.data==null || that.data==null) return false;
+
+        for (int i=0; i<length; i++) {
+            if (!(this.data[i]==null ? that.data[i]==null : this.data[i].equals(that.data[i])))
+                return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -72,7 +95,7 @@ public class MyArrayList<T> implements Iterable<T>{
 
     @Override
     public String toString() {
-        return "MyArrayList{" +
+        return "SArrayList{" +
                 "data=" + arrayToString() +
                 ", length=" + length +
                 '}';

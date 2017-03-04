@@ -3,6 +3,7 @@ package it.sijmen.han.sorting;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
+import it.sijmen.han.generics.MemoryCell;
 import org.hamcrest.CustomTypeSafeMatcher;
 import org.hamcrest.Description;
 import org.junit.Test;
@@ -19,13 +20,13 @@ import static org.junit.Assert.*;
 @RunWith(DataProviderRunner.class)
 public class SorterTest {
 
-    static Sorter<Integer>[] sorters = new Sorter[]{
-            new InsertionSort<Integer>(),
-            new MergeSort<Integer>(),
-            new QuickSort<Integer>()
+    static Sorter[] sorters = new Sorter[]{
+            new InsertionSort(),
+            new MergeSort(),
+            new QuickSort()
     };
 
-    static Integer[][] testsets = new Integer[][]{
+    static Comparable[][] testsets = new Comparable[][]{
             //allemaal gelijk
             {1,1,1,1,1,1,1,1,1,1,1,1,1},
             {1,1},
@@ -81,6 +82,12 @@ public class SorterTest {
             {8,8,5,3,9,2,5,9,8,8,6,5,7,10,5,5,7,5,4,2,8,7},
             {18,25,45,10,23,19,44,49,40,14,37,12,50,34,3,25,37,12,2,28,37,4,35,1,21,20,29,37,14,5,43,23,46,28,26,19,37,15,18,14,50,22,47,17},
 
+            //special cases
+            {},
+            null,
+
+            {new MemoryCell<>("A"), new MemoryCell<>("C"), new MemoryCell<>("D"), new MemoryCell<>("Q")},
+
             //the last element is a 5000, auto-generated array
             new Integer[5000]
     };
@@ -103,22 +110,24 @@ public class SorterTest {
         return out;
     }
 
-
     @Test
     @UseDataProvider("sorterDataProvider")
-    public void test(Sorter<Integer> sorter, Integer[] input) throws Exception {
-        Integer[] data = input.clone();
-        data = sorter.sort(data);
+    public void test(Sorter sorter, Comparable[] input) throws Exception {
+        Comparable[] output = input == null ? null : input.clone();
+        output = sorter.sort(output);
 
-        assertThat(sorter.getName() + ":" + Arrays.toString(input), data, sortedArrayMatcher);
+        if(input == null && output == null)
+            return;
 
+        assertThat(sorter.getName() + ":" + Arrays.toString(input), output, sortedArrayMatcher);
     }
 
-    CustomTypeSafeMatcher<Integer[]> sortedArrayMatcher = new CustomTypeSafeMatcher<Integer[]>("sorted array") {
+    CustomTypeSafeMatcher<Comparable[]> sortedArrayMatcher =
+            new CustomTypeSafeMatcher<Comparable[]>("sorted array") {
         @Override
-        protected boolean matchesSafely(Integer[] integers) {
-            for (int i = 0; i < integers.length-1; i++)
-                if(integers[i] > integers[i+1])
+        protected boolean matchesSafely(Comparable[] data) {
+            for (int i = 0; i < data.length-1; i++)
+                if(data[i].compareTo(data[i+1]) > 0)
                     return false;
             return true;
         }
