@@ -38,7 +38,7 @@ public class SArrayList<T> implements Iterable<T> {
     }
 
     private void duplicateSize(){
-        increaseSize(data.length*2+1);
+        increaseSize(data.length * 2 + 1);
     }
 
     private void increaseSize(int size){
