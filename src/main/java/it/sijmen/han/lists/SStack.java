@@ -27,4 +27,11 @@ public class SStack<T> {
     public int getSize(){
         return list.getLenght();
     }
+
+    @Override
+    public String toString() {
+        return "SStack{" +
+                list.dataToString()+
+                '}';
+    }
 }

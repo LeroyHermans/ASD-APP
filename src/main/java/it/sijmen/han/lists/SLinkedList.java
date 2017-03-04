@@ -95,10 +95,14 @@ public class SLinkedList<T> {
         return lenght;
     }
 
+    public String dataToString(){
+        return "data=[" + header;
+    }
+
     @Override
     public String toString() {
         return "SLinkedList{" +
-                "data=[" + header +
+                dataToString() +
                 ", lenght=" + lenght +
                 '}';
     }

@@ -1,6 +1,6 @@
-package it.sijmen.han.fractal;
+package it.sijmen.han.recursive;
 
-import it.sijmen.han.recursive.FibonacciDrawer;
+import it.sijmen.han.exersises.FibonacciDrawer;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

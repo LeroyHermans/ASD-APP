@@ -1,4 +1,4 @@
-package it.sijmen.han.recursive;
+package it.sijmen.han.exersises;
 
 import java.awt.*;
 
