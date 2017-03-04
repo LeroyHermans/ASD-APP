@@ -1,76 +1,44 @@
 package it.sijmen.han.sorting;
 
-import java.util.Arrays;
-
 /**
  * Created by Sijmen on 10-2-2017.
  */
-public class QuickSort extends Sorter {
+public class QuickSort<T extends Comparable<T>> extends Sorter<T> {
 
     @Override
-    public int[] sort(int[] nums) {
-        return quicksort(nums, 0, nums.length-1);
+    public T[] sort(T[] unsorted) {
+        return quicksort(unsorted, 0, unsorted.length-1);
     }
 
-    public int[] quicksort(int[] nums, int lowIndex, int highIndex){
-        System.out.println("QUICKSORT");
-        System.out.println(Arrays.toString(Arrays.copyOfRange(nums, lowIndex, highIndex+1)));
+    @Override
+    public String getName() {
+        return "QuickSort";
+    }
 
-        int pivot = nums[lowIndex+(highIndex-lowIndex)/2];
-        System.out.println("pivot: " + pivot);
+    public T[] quicksort(T[] unsorted, int lowIndex, int highIndex){
+        T pivot = unsorted[lowIndex+(highIndex-lowIndex)/2];
 
         int indexL = lowIndex, indexR = highIndex;
-        printstatus(lowIndex, indexL, indexR);
 
         while(indexL <= indexR){
-            while( nums[indexL] < pivot) {
+            while(unsorted[indexL].compareTo(pivot) < 0)
                 indexL++;
-                printstatus(lowIndex, indexL, indexR);
-            }
-            while(nums[indexR] > pivot) {
+            while(unsorted[indexR].compareTo(pivot) > 0)
                 indexR--;
-                printstatus(lowIndex, indexL, indexR);
-            }
             if(indexL <= indexR) {
-                if(nums[indexL] != nums[indexR]){
-                    System.out.println("ROTATE:");
-                    printstatus(lowIndex, indexL, indexR);
-                    rotate(nums, indexL, indexR);
-                    System.out.println(Arrays.toString(Arrays.copyOfRange(nums, lowIndex, highIndex + 1)));
-                }
+                if(unsorted[indexL] != unsorted[indexR])
+                    rotate(unsorted, indexL, indexR);
+
                 indexL++;
                 indexR--;
-                printstatus(lowIndex, indexL, indexR);
-
             }
         }
 
-        System.out.println(Arrays.toString(Arrays.copyOfRange(nums, lowIndex, highIndex + 1)));
-
-        // Recursion
         if (lowIndex < indexR)
-            quicksort(nums, lowIndex, indexR);
+            quicksort(unsorted, lowIndex, indexR);
         if (indexL < highIndex)
-            quicksort(nums, indexL, highIndex);
+            quicksort(unsorted, indexL, highIndex);
 
-        return nums;
-    }
-
-    private void printstatus(int start, int indexL, int indexR) {
-        if(indexL < indexR)
-            System.out.println(getSpaces(1+(indexL-start)*3)+"L"+getSpaces(-1+(indexR-indexL)*3)+"R");
-        if(indexR < indexL)
-            System.out.println(getSpaces(1+(indexR-start)*3)+"R"+getSpaces(-1+(indexL-indexR)*3)+"L");
-        if(indexR == indexL)
-            System.out.println(getSpaces(1+(indexR-start)*3)+"A");
-    }
-
-    private String getSpaces(int n){
-        String out = "";
-        while(n > 0) {
-            out += " ";
-            n--;
-        }
-        return out;
+        return unsorted;
     }
 }

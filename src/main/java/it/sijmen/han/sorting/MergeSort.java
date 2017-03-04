@@ -1,55 +1,124 @@
 package it.sijmen.han.sorting;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
 /**
  * Created by Sijmen on 10-2-2017.
  */
-public class MergeSort extends Sorter {
+public class MergeSort<T extends Comparable<T>> extends Sorter<T> {
+
+    boolean mulithreadedEnabled;
+
     @Override
-    public int[] sort(int[] unsorted) {
-        return mergesort(unsorted);
+    public T[] sort(T[] unsorted) {
+        mergeSort(unsorted, new Range(0, unsorted.length - 1));
+        return unsorted;
     }
 
-    public int[] mergesort(int[] array){
-        if(array.length <= 1)
-            return array;
-        if(array.length <= 2) {
-            if(array[0] <= array[1])
-                return array;
-            return new int[]{array[1], array[0]};
+    @Override
+    public String getName() {
+        return "MergeSort";
+    }
+
+    /**
+     * Mergesort a subset of a given array
+     * @param array the array that contains the subset that needs to be sorted.
+     *              This array is also the target array!
+     * @param range The range of the array that needs to be sorted.
+     */
+    public void mergeSort(final T[] array, Range range) {
+        if(range.length <= 1)
+            return; // only 1 element in the subset, there is nothing to sort.
+        if(range.length == 2) {
+            //two elements, swich if needed.
+            //only swich if the first element is bigger than the last
+            if(array[range.start].compareTo(array[range.end]) > 0)
+                rotate(array, range.start, range.end);
+            return;
         }
 
-        return merge(
-                mergesort(Arrays.copyOfRange(array, 0, array.length / 2)),
-                mergesort(Arrays.copyOfRange(array, array.length/2, array.length))
-        );
+        final Range rangeL = new Range(range.start, range.start + range.length / 2);
+        final Range rangeR = new Range(range.start + range.length / 2 + 1 , range.end);
+
+        if(mulithreadedEnabled && range.length > 1000){
+            // if we are dealing with big numers than multithread this thing.
+            Thread threadL = new Thread(() -> {
+                mergeSort(array, rangeL);
+            });
+            Thread threadR = new Thread(() -> {
+                mergeSort(array, rangeR);
+            });
+            threadL.start();
+            threadR.start();
+            try {
+                threadL.join();
+                threadR.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }else {
+            // to make sure we are not making too many threads,
+            // do not mulithread if the lenght is smaller than 1000
+            mergeSort(array, rangeL);
+            mergeSort(array, rangeR);
+        }
+
+
+        merge(array, rangeL, rangeR);
     }
 
-    public int[] merge(int[] arr1, int[] arr2){
-        int[] arrOut = new int[arr1.length + arr2.length];
+    /**
+     * Merges two ranges in a array to a single sorted range
+     * @param target The array to operate on
+     * @param rangeL The left range. This range must be sorted
+     * @param rangeR The right range. This range must be sorted and start exacly after rangeL.
+     */
+    public void merge(T[] target, Range rangeL, Range rangeR){
+        Object[] arrOut = new Object[rangeL.length + rangeR.length];
 
-        int arr1I = 0, arr2I = 0;
+        int li = 0, ri = 0;
 
         for(int i = 0; i < arrOut.length; i++){
-            if(arr1I >= arr1.length){ // als arr1 leeg is, pak van 2
-                arrOut[i] = arr2[arr2I];
-                arr2I++;
+            if(li >= rangeL.length){ // als L leeg is, pak van R
+                arrOut[i] = target[rangeR.start + ri];
+                ri++;
             }
-            else if(arr2I >= arr2.length){ // als arr2 leeg is, pak van 1
-                arrOut[i] = arr1[arr1I];
-                arr1I++;
+            else if(ri >= rangeR.length){ // als R leeg is, pak van L
+                arrOut[i] = target[rangeL.start + li];
+                li++;
             }
-            else if(arr1[arr1I] <= arr2[arr2I]) { //pak van de laagste: 1
-                arrOut[i] = arr1[arr1I];
-                arr1I++;
+            else if(target[rangeL.start + li].compareTo(target[rangeR.start + ri]) <= 0) { //pak van de laagste: L
+                arrOut[i] = target[rangeL.start + li];
+                li++;
             }
             else{ //pak van de laagste: 2
-                arrOut[i] = arr2[arr2I];
-                arr2I++;
+                arrOut[i] = target[rangeR.start + ri];
+                ri++;
             }
         }
-        return arrOut;
+
+        for (int i = 0; i < arrOut.length; i++)
+            target[rangeL.start+i] = (T) arrOut[i];
     }
+
+    class Range {
+        int start;
+        int end; // end is the last element!
+        int length;
+
+        public Range(int start, int end) {
+            this.start = start;
+            this.end = end;
+            this.length = end-start+1;
+        }
+
+        @Override
+        public String toString() {
+            return "Range{" +
+                    "start=" + start +
+                    ", end=" + end +
+                    ", length=" + length +
+                    '}';
+        }
+    }
+
+
 }
