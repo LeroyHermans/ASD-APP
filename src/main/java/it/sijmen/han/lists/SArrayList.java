@@ -27,6 +27,9 @@ public class SArrayList<T> implements Iterable<T> {
         this.length = data.length;
     }
 
+    /**
+     * Voeg toe aan het einde
+     */
     public int add(T obj){
         if(data.length == length)
             duplicateSize();
@@ -44,25 +47,40 @@ public class SArrayList<T> implements Iterable<T> {
         System.arraycopy(old, 0, data, 0, old.length);
     }
 
+    /**
+     * Geef element op index
+     */
     public T get(int index){
         if(index < 0 || index > length -1)
             throw new IndexOutOfBoundsException();
         return (T) data[index];
     }
 
-    public void remove(int index){
+    /**
+     * Verwijder element op index. Alle element ná deze index
+     * worden 1 plek naar links geschoven.
+     */
+    public T remove(int index){
         if(index > length-1 || index < 0)
             throw new IndexOutOfBoundsException();
+        Object toRemove = data[index];
         System.arraycopy(data, index + 1, data, index, length - 1 - index);
         length--;
+        return (T) toRemove;
     }
 
+    /**
+     * Zet een bepaalde index naar een bepaalde waarde
+     */
     public void set(int index, T value){
         if(index < 0 || index > length-1)
             throw new IndexOutOfBoundsException();
         data[index] = value;
     }
 
+    /**
+     * Huidige lengte
+     */
     public int length(){
         return length;
     }
@@ -101,7 +119,11 @@ public class SArrayList<T> implements Iterable<T> {
                 '}';
     }
 
-    private String arrayToString(){
+    /**
+     * Alleen het array gedeelte naar een string omzetten inclusief '[' en ']'
+     * @return
+     */
+    public String arrayToString(){
         StringBuilder b = new StringBuilder();
         b.append('[');
         for (int i = 0; ; i++) {

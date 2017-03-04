@@ -2,6 +2,7 @@ package it.sijmen.han.lists;
 
 /**
  * Sijmens Stack
+ * #untested
  * Created by Sijmen on 15-2-2017.
  */
 public class SStack<T> {
