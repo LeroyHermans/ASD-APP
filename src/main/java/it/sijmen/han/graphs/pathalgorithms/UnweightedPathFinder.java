@@ -11,31 +11,31 @@ import java.util.Queue;
  */
 public class UnweightedPathFinder {
 
-    /**
-     * Single-source unweighted shortest-path algorithm.
-     */
-    public void unweighted(String startName) {
-        clearAll();
-
-        Node start = getNode(startName);
-
-        Queue<Node> q = new LinkedList<>();
-        q.add(start);
-        start.dist = 0;
-
-        while (!q.isEmpty()) {
-            Node v = q.remove();
-
-            for (Edge e : v.adj) {
-                Node w = e.dest;
-
-                if (w.dist == -1) {
-                    w.dist = v.dist + 1;
-                    w.prev = v;
-                    q.add(w);
-                }
-            }
-        }
-    }
+//    /**
+//     * Single-source unweighted shortest-path algorithm.
+//     */
+//    public void unweighted(String startName) {
+//        clearAll();
+//
+//        Node start = getNode(startName);
+//
+//        Queue<Node> q = new LinkedList<>();
+//        q.add(start);
+//        start.dist = 0;
+//
+//        while (!q.isEmpty()) {
+//            Node v = q.remove();
+//
+//            for (Edge e : v.adj) {
+//                Node w = e.dest;
+//
+//                if (w.dist == -1) {
+//                    w.dist = v.dist + 1;
+//                    w.prev = v;
+//                    q.add(w);
+//                }
+//            }
+//        }
+//    }
 
 }

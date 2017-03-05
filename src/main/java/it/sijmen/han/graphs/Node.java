@@ -8,7 +8,7 @@ import java.util.List;
  *
  * Created by Sijmen on 5-3-2017.
  */
-public class Node {
+public class Node extends PathElement {
 
     /**
      * Node name
@@ -23,5 +23,13 @@ public class Node {
     public Node(String nm) {
         name = nm;
         adj = new LinkedList<>();
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "name='" + name + '\'' +
+                ", adj=" + adj +
+                '}';
     }
 }

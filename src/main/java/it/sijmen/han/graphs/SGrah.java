@@ -58,13 +58,4 @@ public class SGrah {
         s.adj.add(new Edge(d, cost));
     }
 
-    /**
-     * Initializes the node output info prior to running
-     * any shortest path algorithm.
-     */
-    private void clearAll() {
-        for (Node v : getNodes())
-            v.reset();
-    }
-
 }

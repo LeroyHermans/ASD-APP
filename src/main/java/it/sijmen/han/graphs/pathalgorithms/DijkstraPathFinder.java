@@ -1,5 +1,7 @@
 package it.sijmen.han.graphs.pathalgorithms;
 
+import it.sijmen.han.graphs.Edge;
+import it.sijmen.han.graphs.Node;
 import it.sijmen.han.graphs.SGrah;
 
 import java.util.PriorityQueue;
@@ -35,39 +37,41 @@ public class DijkstraPathFinder extends PathFinder {
      *
      */
     @Override
-    protected void findPath(PathNode start) {
-        PriorityQueue<PathEdge> pq = new PriorityQueue<>();
-
-        pq.add(new PathEdge(start, 0));
-        start.dist = 0;
+    protected void findPath(Node start) {
+        super.findPath(start);
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
 
         int nodesSeen = 0;
-        while (!pq.isEmpty() && nodesSeen < grah.getNodeCount()) {
-            PathEdge curEdge = pq.remove();
-            PathNode curNode = (PathNode) curEdge.dest;
-            if (curNode.isProcessed)
+        Node curNode = start;
+        do {
+            PathNodeInfo curNodeInfo = getNodeInfo(curNode);
+            if (curNodeInfo.isProcessed)
                 continue;
 
-            curNode.isProcessed = true;
+            curNodeInfo.isProcessed = true;
             nodesSeen++;
 
-            for (PathEdge adjPath : curNode.adj()) {
-                PathNode adjDest = (PathNode) adjPath.dest;
+            for (Edge adjPath : curNode.adj) {
+                Node adjDest = adjPath.dest;
+                PathNodeInfo adjNodeDst = getNodeInfo(adjDest);
 
                 if (adjPath.cost < 0)
                     throw new IllegalStateException("Graph has negative edges");
 
                 //if we did not yet visit the adjDest,
                 //or the new (current) route is shorter than the already registered route
-                if (adjDest.dist == -1 ||
-                        curNode.dist +  adjPath.cost < adjDest.dist) {
+                if (adjNodeDst.dist == -1 ||
+                        curNodeInfo.dist +  adjPath.cost < adjNodeDst.dist) {
                     //than we set the route
-                    adjDest.dist = curNode.dist +  adjPath.cost;
-                    adjDest.prev = curNode;
+                    adjNodeDst.dist = curNodeInfo.dist +  adjPath.cost;
+                    adjNodeDst.prev = curNode;
+                    adjNodeDst.edgeToPrev = adjPath;
                     //and make sure we visit the next node
-                    pq.add(new PathEdge(adjDest, adjDest.dist));
+                    pq.add(new Edge(adjDest, adjNodeDst.dist));
                 }
             }
-        }
+        }while (!pq.isEmpty() &&
+                (curNode = pq.remove().dest) != null
+                && nodesSeen < grah.getNodeCount());
     }
 }

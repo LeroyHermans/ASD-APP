@@ -5,7 +5,7 @@ package it.sijmen.han.graphs;
  *
  * Created by Sijmen on 5-3-2017.
  */
-class Edge implements Comparable<Edge> {
+public class Edge extends PathElement implements Comparable<Edge> {
     /**
      * Second node in Edge
      */
@@ -24,5 +24,13 @@ class Edge implements Comparable<Edge> {
     @Override
     public int compareTo(Edge other) {
         return Double.compare(cost, other.cost);
+    }
+
+    @Override
+    public String toString() {
+        return "Edge{" +
+                "dest=" + dest +
+                ", cost=" + cost +
+                '}';
     }
 }
