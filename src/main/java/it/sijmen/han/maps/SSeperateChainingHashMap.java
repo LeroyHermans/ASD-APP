@@ -1,5 +1,7 @@
 package it.sijmen.han.maps;
 
+import it.sijmen.han.lists.SArrayList;
+
 import java.util.*;
 
 /**
@@ -129,7 +131,10 @@ public class SSeperateChainingHashMap<K, V> implements Map<K,V> {
 
     @Override
     public Collection<V> values() {
-        throw new UnsupportedOperationException();
+        SArrayList<V> values= new SArrayList<>();
+        for(MapItem i : getAllMapItems())
+            values.add((V) i.value);
+        return values;
     }
 
     @Override
@@ -142,7 +147,7 @@ public class SSeperateChainingHashMap<K, V> implements Map<K,V> {
         StringBuilder toString = new StringBuilder("SSeperateChainingHashMap{");
         for(MapItem item : data)
             if(item != null) {
-                List<MapItem> all = item.getAll();
+                Collection<MapItem> all = item.getAll();
                 for(MapItem i : all){
                     toString
                             .append("[")
@@ -247,8 +252,8 @@ public class SSeperateChainingHashMap<K, V> implements Map<K,V> {
             return null;
         }
 
-        public List<MapItem> getAll(){
-            List<MapItem> out = new ArrayList<>();
+        public Collection<MapItem> getAll(){
+            Collection<MapItem> out = new SArrayList<>();
             if(this.isEmpty())
                 return out;
             out.add(this);

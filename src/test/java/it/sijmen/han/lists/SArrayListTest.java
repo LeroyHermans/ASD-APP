@@ -28,36 +28,36 @@ public class SArrayListTest {
     }
 
     @Test
-    public void testRemoveCenter() throws Exception {
+    public void testRemoveAtCenter() throws Exception {
         SArrayList<String> arrayList = new SArrayList<>("A", "B", "C", "D");
-        arrayList.remove(2);
+        arrayList.removeAt(2);
         assertEquals(new SArrayList<>("A", "B", "D"), arrayList);
     }
 
     @Test
-    public void testRemoveFirst() throws Exception {
+    public void testRemoveAtFirst() throws Exception {
         SArrayList<String> arrayList = new SArrayList<>("A", "B", "C", "D");
-        arrayList.remove(0);
+        arrayList.removeAt(0);
         assertEquals(new SArrayList<>("B", "C", "D"), arrayList);
     }
 
     @Test
-    public void testRemoveLast() throws Exception {
+    public void testRemoveAtLast() throws Exception {
         SArrayList<String> arrayList = new SArrayList<>("A", "B", "C", "D");
-        arrayList.remove(3);
+        arrayList.removeAt(3);
         assertEquals(new SArrayList<>("A", "B", "C"), arrayList);
     }
 
     @Test(expected=IndexOutOfBoundsException.class)
-    public void testRemoveNegative() throws Exception {
+    public void testRemoveAtNegative() throws Exception {
         SArrayList<String> arrayList = new SArrayList<>("A", "B", "C", "D");
-        arrayList.remove(-1);
+        arrayList.removeAt(-1);
     }
 
     @Test(expected=IndexOutOfBoundsException.class)
-    public void testRemoveOver() throws Exception {
+    public void testRemoveAtOver() throws Exception {
         SArrayList<String> arrayList = new SArrayList<>("A", "B", "C", "D");
-        arrayList.remove(4);
+        arrayList.removeAt(4);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class SArrayListTest {
     @Test
     public void testLengthRemoved() throws Exception {
         SArrayList<String> arrayList = new SArrayList<>("A", "B", "C", "D");
-        arrayList.remove(3);
+        arrayList.removeAt(3);
         assertEquals(3, arrayList.length());
     }
 

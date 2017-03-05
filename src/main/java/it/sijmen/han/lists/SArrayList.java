@@ -1,13 +1,14 @@
 package it.sijmen.han.lists;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
  * Sijmens Array List
  * Created by Sijmen on 15-2-2017.
  */
-public class SArrayList<T> implements Iterable<T> {
+public class SArrayList<T> implements Collection<T>, Iterable<T> {
 
     private Object[] data;
 
@@ -30,11 +31,53 @@ public class SArrayList<T> implements Iterable<T> {
     /**
      * Voeg toe aan het einde
      */
-    public int add(T obj){
+    @Override
+    public boolean add(T obj){
         if(data.length == length)
             duplicateSize();
         data[length] = obj;
-        return length++;
+        length++;
+        return true;
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        for(Object o : c){
+            if(!this.contains(o))
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> c) {
+        boolean isChanged = false;
+        for(T o : c){
+            if(this.add(o))
+                isChanged = true;
+        }
+        return isChanged;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        boolean isChanged = false;
+        for(Object o : c){
+            if(this.remove(o))
+                isChanged = true;
+        }
+        return isChanged;
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return false;
+    }
+
+    @Override
+    public void clear() {
+        for(int i = 0; i < length; i++)
+            data[i] = null;
     }
 
     private void duplicateSize(){
@@ -60,7 +103,30 @@ public class SArrayList<T> implements Iterable<T> {
      * Verwijder element op index. Alle element ná deze index
      * worden 1 plek naar links geschoven.
      */
-    public T remove(int index){
+    @Override
+    public boolean remove(Object o){
+        int index = getIndex(o);
+        if(index == -1)
+            return false;
+        System.arraycopy(data, index + 1, data, index, length - 1 - index);
+        length--;
+        return true;
+    }
+
+    private int getIndex(Object t){
+        for (int i = 0; i < length; i++) {
+            Object d = data[i];
+            if (d.equals(t))
+                return i;
+        }
+        return -1;
+    }
+
+    /**
+     * Verwijder element op index. Alle element ná deze index
+     * worden 1 plek naar links geschoven.
+     */
+    public T removeAt(int index){
         if(index > length-1 || index < 0)
             throw new IndexOutOfBoundsException();
         Object toRemove = data[index];
@@ -135,8 +201,35 @@ public class SArrayList<T> implements Iterable<T> {
     }
 
     @Override
+    public int size() {
+        return length();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return length() == 0;
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        return getIndex(o) != -1;
+    }
+
+    @Override
     public Iterator<T> iterator() {
         return new MyArrayListIterator();
+    }
+
+    @Override
+    public Object[] toArray() {
+        return Arrays.copyOfRange(data, 0, length);
+    }
+
+    @Override
+    public <T1> T1[] toArray(T1[] a) {
+        for (int i = 0; i < data.length; i++)
+            a[i] = (T1) data[i];
+        return a;
     }
 
     class MyArrayListIterator implements Iterator<T> {

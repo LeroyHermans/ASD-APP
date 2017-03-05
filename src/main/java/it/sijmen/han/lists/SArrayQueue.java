@@ -25,7 +25,7 @@ public class SArrayQueue<T> {
     public T remove(){
         if(isEmpty())
             return null;
-        return list.remove(0);
+        return list.removeAt(0);
     }
 
     /**
