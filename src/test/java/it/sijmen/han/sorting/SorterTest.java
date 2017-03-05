@@ -5,7 +5,6 @@ import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import it.sijmen.han.generics.MemoryCell;
 import org.hamcrest.CustomTypeSafeMatcher;
-import org.hamcrest.Description;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

@@ -39,7 +39,7 @@ public class DijkstraPathFinder extends PathFinder {
     @Override
     protected void findPath(Node start) {
         super.findPath(start);
-        PriorityQueue<Edge> pq = new PriorityQueue<>();
+        PriorityQueue<Edge> toVisitEdges = new PriorityQueue<>();
 
         int nodesSeen = 0;
         Node curNode = start;
@@ -67,11 +67,11 @@ public class DijkstraPathFinder extends PathFinder {
                     adjNodeDst.prev = curNode;
                     adjNodeDst.edgeToPrev = adjPath;
                     //and make sure we visit the next node
-                    pq.add(new Edge(adjDest, adjNodeDst.dist));
+                    toVisitEdges.add(new Edge(adjDest, adjNodeDst.dist));
                 }
             }
-        }while (!pq.isEmpty() &&
-                (curNode = pq.remove().dest) != null
+        }while (!toVisitEdges.isEmpty() &&
+                (curNode = toVisitEdges.remove().dest) != null
                 && nodesSeen < grah.getNodeCount());
     }
 }
