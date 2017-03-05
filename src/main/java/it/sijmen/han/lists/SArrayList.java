@@ -113,6 +113,17 @@ public class SArrayList<T> implements Collection<T>, Iterable<T> {
         return true;
     }
 
+    /**
+     * Verwijder element op index. returns null als
+     * het element niet bestaat.
+     */
+    public T getAndRemove(Object o){
+        int index = getIndex(o);
+        if(index == -1)
+            return null;
+        return removeAt(index);
+    }
+
     private int getIndex(Object t){
         for (int i = 0; i < length; i++) {
             Object d = data[i];
