@@ -6,7 +6,7 @@ package it.sijmen.han.trees;
  *
  * Created by Sijmen on 6-3-2017.
  */
-public class SBinaryTree<T> extends AbstractTree {
+public class SBinaryTree<T> extends AbstractTree<T> {
 
     private T value;
     private SBinaryTree<T> left;
@@ -56,7 +56,7 @@ public class SBinaryTree<T> extends AbstractTree {
     }
 
     @Override
-    public AbstractTree[] getNodes() {
+    public AbstractTree<T>[] getNodes() {
         if(hasLeft()){
             if(hasRight())
                 return new SBinaryTree[]{left, right};
@@ -68,7 +68,7 @@ public class SBinaryTree<T> extends AbstractTree {
     }
 
     @Override
-    public Object getValue() {
+    public T getValue() {
         return value;
     }
 

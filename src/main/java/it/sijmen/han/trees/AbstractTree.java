@@ -1,5 +1,8 @@
 package it.sijmen.han.trees;
 
+import it.sijmen.han.trees.algos.SizeAlgo;
+import it.sijmen.han.trees.algos.ToStringAlgo;
+
 /**
  * Created by Sijmen on 6-3-2017.
  */
@@ -11,8 +14,13 @@ public abstract class AbstractTree<T> {
 
     @Override
     public String toString() {
-        TreeToString<T> toString =  new TreeToString<>();
-        return toString.treeToString(this);
+        ToStringAlgo<T> toString = new ToStringAlgo<>();
+        return toString.apply(this);
+    }
+
+    public int getSize(){
+        SizeAlgo<T> sizeAlgo = new SizeAlgo<>();
+        return sizeAlgo.apply(this);
     }
 
 }

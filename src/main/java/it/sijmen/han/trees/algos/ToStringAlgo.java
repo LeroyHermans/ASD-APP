@@ -1,15 +1,17 @@
-package it.sijmen.han.trees;
+package it.sijmen.han.trees.algos;
 
 import it.sijmen.han.lists.SArrayList;
+import it.sijmen.han.trees.AbstractTree;
 
 import java.util.Arrays;
 
 /**
  * Created by Sijmen on 6-3-2017.
  */
-public class TreeToString<T> {
+public class ToStringAlgo<T> implements AbstractTreeAlgorithm<T, String> {
 
-    public String treeToString(AbstractTree<T> tree) {
+    @Override
+    public String apply(AbstractTree<T> tree) {
         ToStringStatus stringStatus = new ToStringStatus();
         treeToString(tree, 0, stringStatus);
         return stringStatus.toString();
