@@ -48,11 +48,12 @@ public class STree<T> extends AbstractTree<T> {
         return value;
     }
 
+    @Override
     public void setValue(T value) {
         this.value = value;
     }
 
-    public AbstractTree<T>[] getNodes() {
+    public STree<T>[] getNodes() {
         if(nodes == null)
             return new STree[0];
         return (STree<T>[]) nodes.toArray(new STree[nodes.length()]);

@@ -13,6 +13,8 @@ public abstract class AbstractTree<T> {
 
     public abstract T getValue();
 
+    public abstract void setValue(T v);
+
     @Override
     public String toString() {
         ToStringAlgo<T> toString = new ToStringAlgo<>();

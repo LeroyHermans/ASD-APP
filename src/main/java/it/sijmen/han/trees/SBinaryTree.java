@@ -24,9 +24,9 @@ public class SBinaryTree<T> extends AbstractTree<T> {
         return value;
     }
 
-    public SBinaryTree<T> value(T value) {
+    @Override
+    public void setValue(T value) {
         this.value = value;
-        return this;
     }
 
     public SBinaryTree<T> left() {
