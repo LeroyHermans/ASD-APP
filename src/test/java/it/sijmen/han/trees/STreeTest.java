@@ -1,6 +1,5 @@
 package it.sijmen.han.trees;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -10,34 +9,29 @@ import static org.junit.Assert.*;
  */
 public class STreeTest {
 
-    STree<String> supertree;
-
-    @Before
-    public void setUp() throws Exception {
-        supertree = new STree<>("X");
-
-        STree<String> a = supertree.addNode("A");
-        a.addNode("B");
-        STree<String> c = a.addNode("C");
-        c.addNode("D");
-        c.addNode("E");
-        c.addNode("F");
-
-        STree<String> d = supertree.addNode("GGGGGGGG");
-        d.addNode("H");
-        STree<String> f = d.addNode("IIIIIIII");
-        f.addNode("JJJJJJJ");
-        f.addNode("K");
-        f.addNode("L");
-//        STree<String> m = f.addNode("M");
-//        m.addNode("N");
-//        m.addNode("O");
-//        m.addNode("P");
-//        m.addNode("Q");
-    }
-
     @Test
-    public void testToString() throws Exception {
-        System.out.println(supertree.toString());
+    public void testEverything() throws Exception {
+        STree<String> supertree = new STree<>();
+
+        assertTrue(supertree.isEmpty());
+        supertree.setValue("X");
+        assertFalse(supertree.isEmpty());
+
+        assertFalse(supertree.hasNodes());
+        STree<String> a = supertree.addNode("A");
+        assertFalse(supertree.isEmpty());
+        assertTrue(supertree.hasNodes());
+        assertEquals(a, supertree.getNodes()[0]);
+
+        supertree.removeNode(a);
+
+        assertTrue(!supertree.hasNodes());
+        assertFalse(supertree.hasNodes());
+        assertEquals(0, supertree.getNodes().length);
+
+        a = supertree.addNode("a2");
+        assertEquals("a2", a.getValue());
+        a.setValue("a");
+        assertEquals("a", a.getValue());
     }
 }

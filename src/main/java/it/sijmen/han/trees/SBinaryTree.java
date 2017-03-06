@@ -6,13 +6,13 @@ package it.sijmen.han.trees;
  *
  * Created by Sijmen on 6-3-2017.
  */
-public class SBinaryTree<T> {
+public class SBinaryTree<T> extends AbstractTree {
 
     private T value;
-    private SBinaryTree left;
-    private SBinaryTree right;
+    private SBinaryTree<T> left;
+    private SBinaryTree<T> right;
 
-    private SBinaryTree(T value) {
+    public SBinaryTree(T value) {
         if(value == null)
             throw new IllegalArgumentException("Value cannot be null");
         this.value = value;
@@ -24,16 +24,16 @@ public class SBinaryTree<T> {
         return value;
     }
 
-    public SBinaryTree value(T value) {
+    public SBinaryTree<T> value(T value) {
         this.value = value;
         return this;
     }
 
-    public SBinaryTree left() {
+    public SBinaryTree<T> left() {
         return left;
     }
 
-    public SBinaryTree left(T value) {
+    public SBinaryTree<T> left(T value) {
         this.left = new SBinaryTree<>(value);
         return left;
     }
@@ -42,17 +42,34 @@ public class SBinaryTree<T> {
         return left() != null;
     }
 
-    public SBinaryTree right() {
+    public SBinaryTree<T> right() {
         return this.right;
     }
 
-    public SBinaryTree right(T value) {
+    public SBinaryTree<T> right(T value) {
         this.right = new SBinaryTree<>(value);
         return this.right;
     }
 
     public boolean hasRight(){
         return right() != null;
+    }
+
+    @Override
+    public AbstractTree[] getNodes() {
+        if(hasLeft()){
+            if(hasRight())
+                return new SBinaryTree[]{left, right};
+            return new SBinaryTree[]{left};
+        }
+        if(hasRight())
+            return new SBinaryTree[]{right};
+        return new SBinaryTree[0];
+    }
+
+    @Override
+    public Object getValue() {
+        return value;
     }
 
 }

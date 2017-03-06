@@ -144,4 +144,16 @@ public class SArrayListTest {
         arrayList.add("D");
         assertEquals(new SArrayList<>("A", "B", "C", "D"), arrayList);
     }
+
+    @Test
+    public void testToArray() throws Exception {
+        SArrayList<String> arrayList = new SArrayList<>();
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("D");
+        arrayList.remove("C");
+
+        assertArrayEquals(new String[]{"A", "B", "D"}, arrayList.toArray(new String[3]));
+    }
 }

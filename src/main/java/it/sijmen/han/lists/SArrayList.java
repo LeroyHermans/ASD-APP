@@ -238,7 +238,9 @@ public class SArrayList<T> implements Collection<T>, Iterable<T> {
 
     @Override
     public <T1> T1[] toArray(T1[] a) {
-        for (int i = 0; i < data.length; i++)
+        if(a == null || a.length != this.size())
+            throw new IllegalArgumentException();
+        for (int i = 0; i < length; i++)
             a[i] = (T1) data[i];
         return a;
     }
