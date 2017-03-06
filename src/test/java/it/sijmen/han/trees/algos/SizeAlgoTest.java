@@ -12,13 +12,11 @@ public class SizeAlgoTest extends TreeTestSeeder {
 
     @Test
     public void testGetSizesSTree() throws Exception {
-        SizeAlgo<String> algo = new SizeAlgo<>();
-        assertEquals(13, (int)algo.apply(sTree));
+        assertEquals(13, sTree.getSize());
     }
 
     @Test
     public void testGetSizesBinaryTree() throws Exception {
-        SizeAlgo<String> algo = new SizeAlgo<>();
-        assertEquals(7, (int) algo.apply(binaryTree));
+        assertEquals(7, binaryTree.getSize());
     }
 }

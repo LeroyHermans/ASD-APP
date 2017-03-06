@@ -8,7 +8,7 @@ import java.util.Arrays;
 /**
  * Created by Sijmen on 6-3-2017.
  */
-public class ToStringAlgo<T> implements AbstractTreeAlgorithm<T, String> {
+public class ToStringAlgo<T> implements TreeAlgorithm<T, String> {
 
     @Override
     public String apply(AbstractTree<T> tree) {

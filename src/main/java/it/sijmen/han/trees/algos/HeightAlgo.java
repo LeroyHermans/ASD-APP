@@ -3,25 +3,24 @@ package it.sijmen.han.trees.algos;
 import it.sijmen.han.trees.AbstractTree;
 
 /**
- * Calculates the full sieze of the tree. Counts all elements
- * including the top element that contain a not-null value.
- *
  * Created by Sijmen on 6-3-2017.
  */
-public class SizeAlgo<T> implements TreeAlgorithm<T, Integer> {
+public class HeightAlgo<T> implements TreeAlgorithm<T, Integer> {
 
     @Override
     public Integer apply(AbstractTree<T> tree) {
         if(tree == null)
             return 0;
-        int i = 0;
-        if(tree.getValue() != null)
-            i++;
+
+        int max = 0;
         AbstractTree<T>[] nodes = tree.getNodes();
         if(nodes != null)
             for(AbstractTree<T> node : nodes)
-                i+=apply(node);
-        return i;
+                max = Integer.max(max, apply(node));
+
+        if(tree.getValue() != null)
+            max++;
+        return max;
     }
 
 }

@@ -2,6 +2,7 @@ package it.sijmen.han.trees;
 
 import it.sijmen.han.trees.algos.SizeAlgo;
 import it.sijmen.han.trees.algos.ToStringAlgo;
+import it.sijmen.han.trees.algos.HeightAlgo;
 
 /**
  * Created by Sijmen on 6-3-2017.
@@ -23,4 +24,8 @@ public abstract class AbstractTree<T> {
         return sizeAlgo.apply(this);
     }
 
+    public int getHeight() {
+        HeightAlgo<T> heightAlgo = new HeightAlgo<>();
+        return heightAlgo.apply(this);
+    }
 }
