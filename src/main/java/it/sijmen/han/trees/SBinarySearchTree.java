@@ -1,0 +1,183 @@
+package it.sijmen.han.trees;
+
+import it.sijmen.han.trees.algos.CompareFinderAlgo;
+import javafx.util.Pair;
+
+import java.util.Objects;
+
+/**
+ * Sijmens Super Custom Binary Search Tree
+ *
+ * A SBinarySearchTree must always have at least 1 item.
+ *
+ * Created by Sijmen on 7-3-2017.
+ */
+public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> {
+
+    private T value;
+
+    private SBinarySearchTree<T> left, right;
+
+    public SBinarySearchTree() {
+        
+    }
+    
+    public void add(T newValue) {
+        if(newValue == null)
+            throw new IllegalArgumentException("Key cannot be null");
+        if(this.getValue() == null) {
+            this.setValue(newValue);
+            return;
+        }
+        int compareto = newValue.compareTo(getValue());
+        if(compareto == 0)
+            throw new IllegalArgumentException("Key already in tree");
+        else if(compareto < 0){  // newkey < this.value
+            if(!hasLeft())
+                this.setLeft(new SBinarySearchTree<>());
+            this.getLeft().add(newValue);
+        }else{
+            if(!hasRight())
+                this.setRight(new SBinarySearchTree<>());
+            this.getRight().add(newValue);
+        }
+    }
+
+    public T find(T key){
+        SBinarySearchTree<T> subTree = findSubTree(key);
+        if(subTree == null)
+            return null;
+        return subTree.getValue();
+    }
+
+    private SBinarySearchTree<T> findSubTree(T key){
+        if(getValue() == null)
+            return null;
+        if(key == null)
+            throw new IllegalArgumentException("Key cannot be null");
+        int compareto = key.compareTo(getValue());
+        if(compareto == 0)
+            return this;
+        else if(compareto > 0) { //newkey > value
+            if (!hasRight())
+                return null;
+            return getRight().findSubTree(key);
+        }else {
+            if(!hasLeft())
+                return null;
+            return getLeft().findSubTree(key);
+        }
+    }
+
+    public SBinarySearchTree<T> findLowest() {
+        CompareFinderAlgo<SBinarySearchTree<T>, T> algo
+                = new CompareFinderAlgo<>(
+                (o1, o2) -> {
+                    if(o1 == null && o2 == null)
+                        return 0;
+                    if(o2 == null) return 1;
+                    if(o1 == null) return -1;
+                    return o2.getValue().compareTo(o1.getValue());
+                }
+        );
+        return algo.apply(this);
+    }
+
+    public SBinarySearchTree<T> findHighest() {
+        CompareFinderAlgo<SBinarySearchTree<T>, T> algo
+                = new CompareFinderAlgo<>(
+                (o1, o2) -> {
+                    if(o1 == null && o2 == null)
+                        return 0;
+                    if(o1 == null) return 1;
+                    if(o2 == null) return -1;
+                    return o1.getValue().compareTo(o2.getValue());
+                }
+        );
+        return algo.apply(this);
+    }
+
+    public void remove(T key){
+        SBinarySearchTree<T> subTree = findSubTree(key);
+        if(subTree == null)
+            throw new IllegalArgumentException("Key not found");
+        subTree.remove();
+    }
+
+    public void remove(){
+        if(!hasAChild()){
+            //no children means bottom of tree so we can delete the value
+            this.setValue(null);
+        }else if(hasBothChilds()){
+            SBinarySearchTree<T> lowest = getRight().findLowest();
+            this.setValue(lowest.getValue());
+            lowest.setValue(null);
+        }else{
+            if(hasRight()){
+                setValue(getRight().getValue());
+                setRight(null);
+            }else{
+                setValue(getLeft().getValue());
+                setLeft(null);
+            }
+        }
+    }
+
+    @Override
+    public SBinarySearchTree<T>[] getNodes() {
+        if(hasLeft()){
+            if(hasRight())
+                return new SBinarySearchTree[]{getLeft(), getRight()};
+            return new SBinarySearchTree[]{getLeft()};
+        }
+        if(hasRight())
+            return new SBinarySearchTree[]{getRight()};
+        return new SBinarySearchTree[0];
+    }
+
+    @Override
+    public T getValue() {
+        return value;
+    }
+
+    public boolean hasRight(){
+        return this.getRight() != null && this.getRight().value != null;
+    }
+
+    public boolean hasLeft(){
+        return this.getLeft() != null && this.getLeft().value != null;
+    }
+
+    public boolean hasBothChilds() {
+        return hasLeft() && hasRight();
+    }
+
+    public boolean hasAChild(){
+        return hasLeft() || hasRight();
+    }
+
+    public boolean hasValue(){
+        return this.value != null;
+    }
+
+    @Override
+    public void setValue(T v) {
+        this.value = v;
+    }
+
+    public SBinarySearchTree<T> getLeft() {
+        return left;
+    }
+
+    public void setLeft(SBinarySearchTree<T> left) {
+        this.left = left;
+    }
+
+    public SBinarySearchTree<T> getRight() {
+        return right;
+    }
+
+    public void setRight(SBinarySearchTree<T> right) {
+        this.right = right;
+    }
+}

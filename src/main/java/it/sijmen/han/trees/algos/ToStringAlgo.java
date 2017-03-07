@@ -21,9 +21,11 @@ public class ToStringAlgo<T> implements TreeAlgorithm<T, String> {
     protected void treeToString(AbstractTree<T> tree, int curLevel, ToStringStatus iopt){
         StringBuilder valueLine = iopt.line(curLevel);
 
-        String valueString = tree.getValue().toString();
+        T value = tree.getValue();
+
+        String valueString = value == null ? "null" : value.toString();
         if(valueString.length() > 3)
-            valueString = iopt.addReference(tree.getValue());
+            valueString = iopt.addReference(valueString);
 
         AbstractTree<T>[] nodes = tree.getNodes();
 
@@ -108,9 +110,9 @@ public class ToStringAlgo<T> implements TreeAlgorithm<T, String> {
             return out.toString();
         }
 
-        public String addReference(T value) {
+        public String addReference(String value) {
             referenceCounter++;
-            references.add("[" + referenceCounter + "] = " + value.toString());
+            references.add("[" + referenceCounter + "] = " + value);
             return "[" + referenceCounter + "]";
         }
     }

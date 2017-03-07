@@ -56,7 +56,7 @@ public class SBinaryTree<T> extends AbstractTree<T> {
     }
 
     @Override
-    public AbstractTree<T>[] getNodes() {
+    public SBinaryTree<T>[] getNodes() {
         if(hasLeft()){
             if(hasRight())
                 return new SBinaryTree[]{left, right};

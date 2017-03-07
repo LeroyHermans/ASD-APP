@@ -9,6 +9,10 @@ import it.sijmen.han.trees.algos.HeightAlgo;
  */
 public abstract class AbstractTree<T> {
 
+    /**
+     * Get the direct nodes in this tree.
+     * DOES NOT GET ALL SUB-NODES!
+     */
     public abstract AbstractTree<T>[] getNodes();
 
     public abstract T getValue();
