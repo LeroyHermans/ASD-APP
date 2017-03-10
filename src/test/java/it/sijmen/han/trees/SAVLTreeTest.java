@@ -65,24 +65,43 @@ public class SAVLTreeTest {
         tree.add(2);
         tree.add(6);
 
-        assertEquals(
-                "        12\r\n" +
-                        "    /       \\\r\n" +
-                        "     8      16\r\n" +
-                        "    /  \\    |\r\n" +
-                        "    4  10  14\r\n" +
-                        "    /\\\r\n" +
-                        "  2  6\r\n", tree.toString());
+        SAVLTree<Integer> untilNow = SAVLTreeBuilder.build(root -> {
+            root.value(12);
+            root.left(left -> {
+                left.value(8);
+                left.right(10);
+                left.left(leftleft -> {
+                    leftleft.value(4);
+                    leftleft.left(2);
+                    leftleft.right(6);
+                });
+            });
+            root.right(right -> {
+                right.value(16);
+                right.left(14);
+            });
+        });
+        assertEquals(untilNow, tree);
+
         tree.add(1);
 
-        assertEquals(
-                "        12\r\n" +
-                        "    /       \\\r\n" +
-                        "     4      16\r\n" +
-                        "    /  \\    |\r\n" +
-                        "   2    8  14\r\n" +
-                        "   |    /\\\r\n" +
-                        "  1   6  10\r\n", tree.toString());
+        SAVLTree<Integer> afterSwich = SAVLTreeBuilder.build(root -> {
+            root.value(12);
+            root.left(left -> {
+                left.value(4);
+                left.left(2)
+                        .left(1);
+                left.right(lr -> {
+                    lr.value(8);
+                    lr.left(6);
+                    lr.right(10);
+                });
+            });
+            root.right(16)
+                    .right(14);
+        });
+
+        assertEquals(afterSwich, tree);
 
     }
 
