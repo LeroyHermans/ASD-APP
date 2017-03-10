@@ -1,5 +1,6 @@
 package it.sijmen.han.trees;
 
+import it.sijmen.han.lists.SLinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -77,6 +78,17 @@ public class SBinarySearchTreeTest {
         tree.add(7);
         assertEquals(7, (int)tree.findLowest().getValue());
         assertEquals(10, (int)tree.findHighest().getValue());
+    }
+
+    @Test
+    public void testAddFindRoute() {
+        assertEquals(new SLinkedList<Integer>(), tree.addAndGetRoute(10));
+        assertEquals(new SLinkedList<>(-1), tree.addAndGetRoute(8));
+        assertEquals(new SLinkedList<>(1), tree.addAndGetRoute(12));
+        assertEquals(new SLinkedList<>(1, 1), tree.addAndGetRoute(14));
+        assertEquals(new SLinkedList<>(1, -1), tree.addAndGetRoute(11));
+        assertEquals(new SLinkedList<>(-1, 1), tree.addAndGetRoute(9));
+        assertEquals(new SLinkedList<>(-1, -1), tree.addAndGetRoute(7));
     }
 
     @Test

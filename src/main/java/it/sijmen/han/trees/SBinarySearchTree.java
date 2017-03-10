@@ -1,9 +1,7 @@
 package it.sijmen.han.trees;
 
+import it.sijmen.han.lists.SLinkedList;
 import it.sijmen.han.trees.algos.CompareFinderAlgo;
-import javafx.util.Pair;
-
-import java.util.Objects;
 
 /**
  * Sijmens Super Custom Binary Search Tree
@@ -21,29 +19,49 @@ public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> 
     public SBinarySearchTree() {
         
     }
-    
-    public void add(T newValue) {
+
+    /**
+     * returns the path that is travelded. Where the last element is the parent
+     * of the added node. The value [1, 1, -1] would look like:
+     * A
+     * \
+     * B
+     * \
+     * C
+     * /
+     * new element
+     */
+    protected SLinkedList<Integer> addAndGetRoute(T newValue) {
         if(newValue == null)
             throw new IllegalArgumentException("Key cannot be null");
         if(this.getValue() == null) {
             this.setValue(newValue);
-            return;
+            return new SLinkedList<>();
         }
         int compareto = newValue.compareTo(getValue());
         if(compareto == 0)
             throw new IllegalArgumentException("Key already in tree");
         else if(compareto < 0){  // newkey < this.value
             if(!hasLeft())
-                this.setLeft(new SBinarySearchTree<>());
-            this.getLeft().add(newValue);
-        }else{
+                this.setLeft(createNewNode());
+            SLinkedList<Integer> add = this.getLeft().addAndGetRoute(newValue);
+            add.addFirst(-1);
+            return add;
+
+        } else {
             if(!hasRight())
-                this.setRight(new SBinarySearchTree<>());
-            this.getRight().add(newValue);
+                this.setRight(createNewNode());
+            SLinkedList<Integer> add = this.getRight().addAndGetRoute(newValue);
+            add.addFirst(1);
+            return add;
         }
     }
 
-    public T find(T key){
+    public void add(T newValue) {
+        addAndGetRoute(newValue);
+    }
+
+    public T find(T key) {
         SBinarySearchTree<T> subTree = findSubTree(key);
         if(subTree == null)
             return null;
@@ -135,6 +153,10 @@ public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> 
         return new SBinarySearchTree[0];
     }
 
+    public SBinarySearchTree<T> createNewNode() {
+        return new SBinarySearchTree<>();
+    }
+
     @Override
     public T getValue() {
         return value;
@@ -169,7 +191,7 @@ public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> 
         return left;
     }
 
-    public void setLeft(SBinarySearchTree<T> left) {
+    protected void setLeft(SBinarySearchTree<T> left) {
         this.left = left;
     }
 
@@ -177,7 +199,7 @@ public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> 
         return right;
     }
 
-    public void setRight(SBinarySearchTree<T> right) {
+    protected void setRight(SBinarySearchTree<T> right) {
         this.right = right;
     }
 }
