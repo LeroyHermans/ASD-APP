@@ -102,11 +102,21 @@ public class SAVLTree<T extends Comparable<T>> extends SBinarySearchTree<T> {
         this.setRight(getRight().getRight());
     }
 
-    private void balanceRL() {
+    private void balanceLR() {
+        SAVLTree<T> l = getLeft();
 
+        SAVLTree<T> newLeft = createNewNode();
+        newLeft.setValue(l.getRight().getValue());
+        newLeft.setRight(l.getRight().getRight());
+        newLeft.setLeft(l);
+        newLeft.getLeft().setRight(l.getRight().getLeft());
+
+        setLeft(newLeft);
+
+        balanceLL();
     }
 
-    private void balanceLR() {
+    private void balanceRL() {
 
     }
 

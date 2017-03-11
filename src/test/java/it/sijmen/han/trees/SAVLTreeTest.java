@@ -15,31 +15,10 @@ public class SAVLTreeTest {
 
     @Before
     public void setUp() throws Exception {
-        unablanced1234Tree = new SAVLTree<>();
-        unablanced1234Tree.runWithoutBalance((tree) -> {
-            tree.add(1);
-            tree.add(2);
-            tree.add(3);
-            tree.add(4);
-        });
-
-        unablanced123Tree = new SAVLTree<>();
-        unablanced123Tree.runWithoutBalance((tree) -> {
-            tree.add(1);
-            tree.add(2);
-            tree.add(3);
-        });
-
-        unablanced12Tree = new SAVLTree<>();
-        unablanced12Tree.runWithoutBalance((tree) -> {
-            tree.add(1);
-            tree.add(2);
-        });
-
-        unablanced1Tree = new SAVLTree<>();
-        unablanced1Tree.runWithoutBalance((tree) -> {
-            tree.add(1);
-        });
+        unablanced1234Tree = SAVLTreeBuilder.build(root -> root.value(1).right(2).right(3).right(4));
+        unablanced123Tree = SAVLTreeBuilder.build(root -> root.value(1).right(2).right(3));
+        unablanced12Tree = SAVLTreeBuilder.build(root -> root.value(1).right(2));
+        unablanced1Tree = SAVLTreeBuilder.build(root -> root.value(1));
 
         emptyTree = new SAVLTree<>();
     }
@@ -55,33 +34,19 @@ public class SAVLTreeTest {
 
     @Test
     public void testBalanceLL() throws Exception {
-        SAVLTree<Integer> tree = new SAVLTree<>();
-        tree.add(12);
-        tree.add(8);
-        tree.add(16);
-        tree.add(4);
-        tree.add(10);
-        tree.add(14);
-        tree.add(2);
-        tree.add(6);
-
-        SAVLTree<Integer> untilNow = SAVLTreeBuilder.build(root -> {
+        SAVLTree<Integer> tree = SAVLTreeBuilder.build(root -> {
             root.value(12);
             root.left(left -> {
                 left.value(8);
                 left.right(10);
-                left.left(leftleft -> {
-                    leftleft.value(4);
-                    leftleft.left(2);
-                    leftleft.right(6);
-                });
+                left.left(4,
+                        2,6);
             });
             root.right(right -> {
                 right.value(16);
                 right.left(14);
             });
         });
-        assertEquals(untilNow, tree);
 
         tree.add(1);
 
@@ -91,11 +56,8 @@ public class SAVLTreeTest {
                 left.value(4);
                 left.left(2)
                         .left(1);
-                left.right(lr -> {
-                    lr.value(8);
-                    lr.left(6);
-                    lr.right(10);
-                });
+                left.right(8,
+                        6, 10);
             });
             root.right(16)
                     .right(14);
@@ -107,33 +69,54 @@ public class SAVLTreeTest {
 
     @Test
     public void testBalanceRR() throws Exception {
-        SAVLTree<Integer> tree = new SAVLTree<>();
-
-        tree.add(1);
-        tree.add(0);
-        tree.add(3);
-        tree.add(-1);
-        tree.add(2);
-        tree.add(5);
-        tree.add(4);
-        tree.add(7);
-
-        assertEquals("      1\r\n" +
-                "    /   \\\r\n" +
-                "   0     3\r\n" +
-                "   |    / \\\r\n" +
-                "  -1  2    5\r\n" +
-                "           /\\\r\n" +
-                "         4  7\r\n", tree.toString());
+        SAVLTree<Integer> tree = SAVLTreeBuilder.build(root -> {
+            root.value(1);
+            root.left(0).left(-1);
+            root.right(r -> {
+                r.value(3);
+                r.left(2);
+                r.right(5,
+                        4,7);
+            });
+        });
 
         tree.add(6);
 
-        assertEquals("      1\r\n" +
-                "    /    \\\r\n" +
-                "   0      5\r\n" +
-                "   |    /   \\\r\n" +
-                "  -1    3    7\r\n" +
-                "        /\\   |\r\n" +
-                "      2  4  6\r\n", tree.toString());
+        SAVLTree<Integer> afterSwich = SAVLTreeBuilder.build(root -> {
+            root.value(1);
+            root.left(0).left(-1);
+            root.right(r -> {
+                r.value(5);
+                r.left(3,
+                        2, 4);
+                r.right(7).left(6);
+            });
+        });
+
+        assertEquals(afterSwich, tree);
+    }
+
+    @Test
+    public void testBalanceLR() throws Exception {
+        SAVLTree<Integer> tree = SAVLTreeBuilder.build(root -> {
+            root.value(50)
+                    .right(60);
+            root.left(l -> {
+                l.value(30);
+                l.left(20);
+                l.right(40);
+            });
+        });
+
+        tree.add(45);
+
+        SAVLTree<Integer> after = SAVLTreeBuilder.build(root ->
+            root.value(40)
+                    .right(50, 45, 60)
+                    .left(30).right(20)
+        );
+
+        assertEquals(after, tree);
+
     }
 }

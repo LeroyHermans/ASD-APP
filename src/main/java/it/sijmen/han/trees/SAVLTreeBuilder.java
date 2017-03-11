@@ -20,9 +20,9 @@ public class SAVLTreeBuilder<T extends Comparable<T>> {
         SAVLTree<T> tree = new SAVLTree<>();
         tree.setValue(this.value);
         tree.runWithoutBalance(t -> {
-            if(leftBuilder != null)
+            if (leftBuilder != null)
                 t.setLeft(leftBuilder.makeTree());
-            if(rightBuilder != null)
+            if (rightBuilder != null)
                 t.setRight(rightBuilder.makeTree());
         });
         return tree;
@@ -42,11 +42,25 @@ public class SAVLTreeBuilder<T extends Comparable<T>> {
         return this;
     }
 
+    public SAVLTreeBuilder<T> leftright(T left, T right){
+        this.left(left);
+        this.right(right);
+        return this;
+    }
+
     public SAVLTreeBuilder<T> left(T left){
         if(leftBuilder == null)
             leftBuilder = new SAVLTreeBuilder<>(b -> b.value(left));
         else
             leftBuilder.value(left);
+        return leftBuilder;
+    }
+
+    public SAVLTreeBuilder<T> left(T leftValue, T leftLeft, T leftRight){
+        if(leftBuilder == null)
+            leftBuilder = new SAVLTreeBuilder<>(b -> b.value(leftValue).leftright(leftLeft, leftRight));
+        else
+            leftBuilder.value(leftValue).leftright(leftValue, leftRight);
         return leftBuilder;
     }
 
@@ -71,7 +85,15 @@ public class SAVLTreeBuilder<T extends Comparable<T>> {
             rightBuilder = new SAVLTreeBuilder<>(right);
         else
             right.build(rightBuilder);
-        return rightBuilder;
+        return this;
+    }
+
+    public SAVLTreeBuilder<T> right(T rightValue, T rightLeft, T rightRight){
+        if(rightBuilder == null)
+            rightBuilder = new SAVLTreeBuilder<>(b -> b.value(rightValue).leftright(rightLeft,rightRight));
+        else
+            rightBuilder.value(rightValue).left(rightLeft).right(rightRight);
+        return this;
     }
 
 }
