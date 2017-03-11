@@ -1,5 +1,6 @@
 package it.sijmen.han.trees;
 
+import it.sijmen.han.lists.SArrayList;
 import it.sijmen.han.lists.SLinkedList;
 import it.sijmen.han.trees.algos.CompareFinderAlgo;
 
@@ -25,11 +26,11 @@ public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> 
      * of the added node. The value [1, 1, -1] would look like:
      * A
      * \
-     * B
-     * \
-     * C
-     * /
-     * new element
+     *  B
+     *   \
+     *    C
+     *   /
+     *  new element
      */
     protected SLinkedList<Integer> addAndGetRoute(T newValue) {
         if(newValue == null)
@@ -59,6 +60,11 @@ public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> 
 
     public void add(T newValue) {
         addAndGetRoute(newValue);
+    }
+
+    public void add(T... newValue) {
+        for(T t : newValue)
+            add(t);
     }
 
     public T find(T key) {
@@ -116,13 +122,49 @@ public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> 
     }
 
     public void remove(T key){
-        SBinarySearchTree<T> subTree = findSubTree(key);
-        if(subTree == null)
-            throw new IllegalArgumentException("Key not found");
-        subTree.remove();
+        removeAndGetRoute(key);
     }
 
-    public void remove(){
+    /**
+     * returns the path that is travelded. Where the last element is the parent
+     * of the added node. The value [1, 1, -1] would look like:
+     * A
+     * \
+     *  B
+     *   \
+     *    C
+     *   /
+     *  deleted element
+     */
+    protected SLinkedList<Integer> removeAndGetRoute(T key){
+        if(getValue() == null)
+            return null;
+        if(key == null)
+            throw new IllegalArgumentException("Key cannot be null");
+        int compareto = key.compareTo(getValue());
+        if(compareto == 0) {
+            remove();
+            return new SLinkedList<>();
+        } else if(compareto > 0) { //newkey > value
+            if (!hasRight())
+                throw new IllegalArgumentException("Key not found");
+            SLinkedList<Integer> returns = getRight().removeAndGetRoute(key);
+            if(returns == null)
+                throw new IllegalArgumentException("Key not found");
+            returns.addFirst(1);
+            return returns;
+        }else {
+            if(!hasLeft())
+                throw new IllegalArgumentException("Key not found");
+            SLinkedList<Integer> returns = getLeft().removeAndGetRoute(key);
+            if(returns == null)
+                throw new IllegalArgumentException("Key not found");
+            returns.addFirst(-1);
+            return returns;
+        }
+    }
+
+    protected void remove(){
         if(!hasAChild()){
             //no children means bottom of tree so we can delete the value
             this.setValue(null);

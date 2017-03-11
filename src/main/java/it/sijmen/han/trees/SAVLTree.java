@@ -1,5 +1,6 @@
 package it.sijmen.han.trees;
 
+import it.sijmen.han.lists.SArrayList;
 import it.sijmen.han.lists.SLinkedList;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,17 +35,16 @@ public class SAVLTree<T extends Comparable<T>> extends SBinarySearchTree<T> {
     }
 
     @Override
-    public void remove() {
-        super.remove();
-        //todo
+    protected SLinkedList<Integer> removeAndGetRoute(T key) {
+        SLinkedList<Integer> location = super.removeAndGetRoute(key);
+        if (enableAutobalance.get())
+            balanceTree(location);
+        return location;
     }
 
     public void balanceTree(SLinkedList<Integer> location) {
         if (isTreeBalanced())
             return;
-
-        System.out.println("Balancing from node " + this.getValue() + " original looks like: ");
-        System.out.println(this);
 
         // the location of the new node relative to this node
         int lr1 = location.get(0);
@@ -64,8 +64,6 @@ public class SAVLTree<T extends Comparable<T>> extends SBinarySearchTree<T> {
                 balanceLL();
         }
 
-        System.out.println("after: ");
-        System.out.println(this);
     }
 
     /**
@@ -117,7 +115,18 @@ public class SAVLTree<T extends Comparable<T>> extends SBinarySearchTree<T> {
     }
 
     private void balanceRL() {
+        SAVLTree<T> r = getRight();
 
+        SAVLTree<T> newRight = createNewNode();
+        newRight.setValue(r.getLeft().getValue());
+        newRight.setLeft(r.getLeft().getLeft());
+        newRight.setRight(r);
+        newRight.getRight().setLeft(
+                r.getLeft().getRight());
+
+        setRight(newRight);
+
+        balanceRR();
     }
 
     /**

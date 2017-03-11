@@ -61,7 +61,7 @@ public class SAVLTreeBuilder<T extends Comparable<T>> {
             leftBuilder = new SAVLTreeBuilder<>(b -> b.value(leftValue).leftright(leftLeft, leftRight));
         else
             leftBuilder.value(leftValue).leftright(leftValue, leftRight);
-        return leftBuilder;
+        return this;
     }
 
     public SAVLTreeBuilder<T> right(T right){

@@ -76,7 +76,7 @@ public class SAVLTreeTest {
                 r.value(3);
                 r.left(2);
                 r.right(5,
-                        4,7);
+                        4, 7);
             });
         });
 
@@ -117,6 +117,76 @@ public class SAVLTreeTest {
         );
 
         assertEquals(after, tree);
+    }
 
+
+    @Test
+    public void testBalanceRL() throws Exception {
+        SAVLTree<Integer> tree = SAVLTreeBuilder.build(root -> {
+            root.value(30)
+                    .left(25);
+            root.right(r -> {
+                r.value(50);
+                r.left(40);
+                r.right(60);
+            });
+        });
+
+        tree.add(35);
+
+        SAVLTree<Integer> after = SAVLTreeBuilder.build(root ->
+                        root.value(40)
+                                .left(30, 25, 35)
+                                .right(50).right(60)
+        );
+
+        assertEquals(after, tree);
+    }
+
+    @Test
+    public void testAllRotations() throws Exception {
+        SAVLTree<Integer> tree = new SAVLTree<>();
+        tree.add( 1, 7, 4, 9, 5, 6);
+
+        SAVLTree<Integer> expected = SAVLTreeBuilder.build(root ->
+            root.value(5)
+                    .right(7, 6, 9)
+                    .left(4).left(1)
+        );
+
+        assertEquals(expected, tree);
+    }
+
+    @Test
+    public void testMoreThings() throws Exception {
+        SAVLTree<Integer> tree = new SAVLTree<>();
+        tree.add(20, 4, 15);
+
+        SAVLTree<Integer> expected = SAVLTreeBuilder.build(root -> {
+            root.value(15);
+            root.left(4);
+            root.right(20);
+        });
+
+        assertEquals(expected, tree);
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        SAVLTree<Integer> start = SAVLTreeBuilder.build(root -> {
+            root.value(2);
+            root.left(1);
+            root.right(4, 3, 5);
+        });
+
+        start.remove(1);
+
+        SAVLTree<Integer> expected = SAVLTreeBuilder.build(root -> {
+            root.value(4);
+            root.left(2).left(3);
+            root.right(5);
+        });
+
+        assertEquals(expected, start);
     }
 }
