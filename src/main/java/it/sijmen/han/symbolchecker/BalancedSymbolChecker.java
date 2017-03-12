@@ -1,4 +1,4 @@
-package it.sijmen.han.exersises;
+package it.sijmen.han.symbolchecker;
 
 import it.sijmen.han.lists.SStack;
 
