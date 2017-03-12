@@ -25,11 +25,11 @@ public class SAVLTreeTest {
 
     @Test
     public void testShouldBalance() throws Exception {
-        assertFalse(unablanced1234Tree.isTreeBalanced());
-        assertFalse(unablanced123Tree.isTreeBalanced());
-        assertTrue(unablanced12Tree.isTreeBalanced());
-        assertTrue(unablanced1Tree.isTreeBalanced());
-        assertTrue(emptyTree.isTreeBalanced());
+        assertTrue(unablanced1234Tree.balanceTree());
+        assertTrue(unablanced123Tree.balanceTree());
+        assertFalse(unablanced12Tree.balanceTree());
+        assertFalse(unablanced1Tree.balanceTree());
+        assertFalse(emptyTree.balanceTree());
     }
 
     @Test
@@ -173,6 +173,16 @@ public class SAVLTreeTest {
 
     @Test
     public void testDelete() throws Exception {
+        /*
+testdata from http://stackoverflow.com/a/13843966/2328729
+  2          2            4
+ / \          \          / \
+1   4    =>    4    =>  2   5
+   / \        / \        \
+  3   5      3   5        3
+
+         */
+
         SAVLTree<Integer> start = SAVLTreeBuilder.build(root -> {
             root.value(2);
             root.left(1);
@@ -185,6 +195,57 @@ public class SAVLTreeTest {
             root.value(4);
             root.left(2).left(3);
             root.right(5);
+        });
+
+        assertEquals(expected, start);
+    }
+
+    @Test
+    public void testDelete3Rotates() throws Exception {
+        /*
+        testdata from http://stackoverflow.com/a/13843966/2328729
+    ___5___              ___5___                 ___5___                   ____8____
+   /       \            /       \               /       \                 /         \
+  2         8          2         8             3         8              _5_          A
+ / \       / \          \       / \           / \       / \            /   \        / \
+1   3     7   A     =>   3     7   A      => 2   4     7   A     =>   3     7      9   B
+     \   /   / \          \   /   / \                 /   / \        / \   /            \
+      4 6   9   B          4 6   9   B               6   9   B      2   4 6              C
+                 \                    \                       \
+                  C                    C                       C
+         */
+        SAVLTree<Integer> start = SAVLTreeBuilder.build(root -> {
+            root.value(5);
+            root.left(l -> {
+                l.value(2);
+                l.left(1);
+                l.right(3).right(4);
+            });
+            root.right(r -> {
+                r.value(8);
+                r.left(7).left(6);
+                r.right(rr -> {
+                    rr.value(10);
+                    rr.left(9);
+                    rr.right(11).right(12);
+                });
+            });
+        });
+
+        start.remove(1);
+
+        SAVLTree<Integer> expected = SAVLTreeBuilder.build(root -> {
+            root.value(8);
+            root.left(l ->{
+                l.value(5);
+                l.left(3, 2, 4);
+                l.right(7).left(6);
+            });
+            root.right(r -> {
+                r.value(10);
+                r.left(9);
+                r.right(11).right(12);
+            });
         });
 
         assertEquals(expected, start);

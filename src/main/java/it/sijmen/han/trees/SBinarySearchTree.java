@@ -1,7 +1,5 @@
 package it.sijmen.han.trees;
 
-import it.sijmen.han.lists.SArrayList;
-import it.sijmen.han.lists.SLinkedList;
 import it.sijmen.han.trees.algos.CompareFinderAlgo;
 
 /**
@@ -21,23 +19,12 @@ public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> 
         
     }
 
-    /**
-     * returns the path that is travelded. Where the last element is the parent
-     * of the added node. The value [1, 1, -1] would look like:
-     * A
-     * \
-     *  B
-     *   \
-     *    C
-     *   /
-     *  new element
-     */
-    protected SLinkedList<Integer> addAndGetRoute(T newValue) {
+    public void add(T newValue) {
         if(newValue == null)
             throw new IllegalArgumentException("Key cannot be null");
         if(this.getValue() == null) {
             this.setValue(newValue);
-            return new SLinkedList<>();
+            return;
         }
         int compareto = newValue.compareTo(getValue());
         if(compareto == 0)
@@ -45,21 +32,12 @@ public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> 
         else if(compareto < 0){  // newkey < this.value
             if(!hasLeft())
                 this.setLeft(createNewNode());
-            SLinkedList<Integer> add = this.getLeft().addAndGetRoute(newValue);
-            add.addFirst(-1);
-            return add;
-
+            this.getLeft().add(newValue);
         } else {
             if(!hasRight())
                 this.setRight(createNewNode());
-            SLinkedList<Integer> add = this.getRight().addAndGetRoute(newValue);
-            add.addFirst(1);
-            return add;
+            this.getRight().add(newValue);
         }
-    }
-
-    public void add(T newValue) {
-        addAndGetRoute(newValue);
     }
 
     public void add(T... newValue) {
@@ -122,47 +100,24 @@ public class SBinarySearchTree<T extends Comparable<T>> extends AbstractTree<T> 
     }
 
     public void remove(T key){
-        removeAndGetRoute(key);
-    }
-
-    /**
-     * returns the path that is travelded. Where the last element is the parent
-     * of the added node. The value [1, 1, -1] would look like:
-     * A
-     * \
-     *  B
-     *   \
-     *    C
-     *   /
-     *  deleted element
-     */
-    protected SLinkedList<Integer> removeAndGetRoute(T key){
         if(getValue() == null)
-            return null;
+            throw new IllegalArgumentException("Key not found");
         if(key == null)
             throw new IllegalArgumentException("Key cannot be null");
         int compareto = key.compareTo(getValue());
         if(compareto == 0) {
             remove();
-            return new SLinkedList<>();
         } else if(compareto > 0) { //newkey > value
             if (!hasRight())
                 throw new IllegalArgumentException("Key not found");
-            SLinkedList<Integer> returns = getRight().removeAndGetRoute(key);
-            if(returns == null)
-                throw new IllegalArgumentException("Key not found");
-            returns.addFirst(1);
-            return returns;
+            getRight().remove(key);
         }else {
             if(!hasLeft())
                 throw new IllegalArgumentException("Key not found");
-            SLinkedList<Integer> returns = getLeft().removeAndGetRoute(key);
-            if(returns == null)
-                throw new IllegalArgumentException("Key not found");
-            returns.addFirst(-1);
-            return returns;
+            getLeft().remove(key);
         }
     }
+
 
     protected void remove(){
         if(!hasAChild()){

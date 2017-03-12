@@ -81,17 +81,6 @@ public class SBinarySearchTreeTest {
     }
 
     @Test
-    public void testAddFindRoute() {
-        assertEquals(new SLinkedList<Integer>(), tree.addAndGetRoute(10));
-        assertEquals(new SLinkedList<>(-1), tree.addAndGetRoute(8));
-        assertEquals(new SLinkedList<>(1), tree.addAndGetRoute(12));
-        assertEquals(new SLinkedList<>(1, 1), tree.addAndGetRoute(14));
-        assertEquals(new SLinkedList<>(1, -1), tree.addAndGetRoute(11));
-        assertEquals(new SLinkedList<>(-1, 1), tree.addAndGetRoute(9));
-        assertEquals(new SLinkedList<>(-1, -1), tree.addAndGetRoute(7));
-    }
-
-    @Test
     public void testFindHighest(){
         tree.add(10);
         tree.add(9);

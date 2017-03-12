@@ -1,6 +1,5 @@
 package it.sijmen.han.trees;
 
-import it.sijmen.han.lists.SArrayList;
 import it.sijmen.han.lists.SLinkedList;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,43 +26,45 @@ public class SAVLTree<T extends Comparable<T>> extends SBinarySearchTree<T> {
     }
 
     @Override
-    protected SLinkedList<Integer> addAndGetRoute(T newValue) {
-        SLinkedList<Integer> location = super.addAndGetRoute(newValue);
+    public void add(T newValue) {
+        super.add(newValue);
         if (enableAutobalance.get())
-            balanceTree(location);
-        return location;
+            balanceTree();
     }
 
     @Override
-    protected SLinkedList<Integer> removeAndGetRoute(T key) {
-        SLinkedList<Integer> location = super.removeAndGetRoute(key);
+    public void remove(T key) {
+        super.remove(key);
         if (enableAutobalance.get())
-            balanceTree(location);
-        return location;
+            balanceTree();
     }
 
-    public void balanceTree(SLinkedList<Integer> location) {
-        if (isTreeBalanced())
-            return;
+    public boolean balanceTree() {
+        int lHeight = getHeight(getLeft());
+        int rHeight = getHeight(getRight());
 
-        // the location of the new node relative to this node
-        int lr1 = location.get(0);
-
-        // the location of the new node relative to my child node
-        int lr2 = location.get(1);
-
-        if (lr1 == 1) {
-            if (lr2 == 1)
-                balanceRR();
-            else
-                balanceRL();
-        } else {
-            if (lr2 == 1)
+        if(lHeight - rHeight >= 2){ //unbalanced, left is bigger
+            if(getHeight(getLeft().getRight()) >
+                    getHeight(getLeft().getLeft()))
                 balanceLR();
             else
                 balanceLL();
+            return true;
+        } else if(rHeight - lHeight >= 2) { //unbalanced, right is bigger
+            if(getHeight(getRight().getLeft()) >
+                    getHeight(getRight().getRight()))
+                balanceRL();
+            else
+                balanceRR();
+            return true;
         }
+        return false;
+    }
 
+    private int getHeight(SAVLTree<T> n) {
+        if(n == null)
+            return 0;
+        return n.getHeight();
     }
 
     /**
@@ -127,19 +128,6 @@ public class SAVLTree<T extends Comparable<T>> extends SBinarySearchTree<T> {
         setRight(newRight);
 
         balanceRR();
-    }
-
-    /**
-     * Returns wether or not the tree is unbalanced.
-     */
-    boolean isTreeBalanced() {
-        int leftHeight = 0, rightHeight = 0;
-        if (hasLeft())
-            leftHeight = getLeft().getHeight();
-        if (hasRight())
-            rightHeight = getRight().getHeight();
-
-        return Math.abs(leftHeight - rightHeight) < 2;
     }
 
     @FunctionalInterface
